@@ -61,12 +61,12 @@ namespace DynamiteTester
                 rounds.Add(new GameRound() { Move1 = move1, Move2 = move2, Winner = winner });
                 if ((winner == 1) && ((++score1) >= target))
                 {
-                    result = $"{player1Name} 1 won (first to {target})";
+                    result = $"{player1Name} won (first to {target})";
                     break;
                 }
                 if ((winner == 2) && ((++score2) >= target))
                 {
-                    result = $"{player1Name} 2 won (first to {target})";
+                    result = $"{player2Name} won (first to {target})";
                     break;
                 }
 
