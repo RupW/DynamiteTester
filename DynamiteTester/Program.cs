@@ -125,7 +125,7 @@ namespace DynamiteTester
                 case Move.S:
                     return other == Move.P || other == Move.W;
                 case Move.D:
-                    return other != Move.W;
+                    return other != Move.W && other != Move.D;
                 case Move.W:
                     return other == Move.D;
             }

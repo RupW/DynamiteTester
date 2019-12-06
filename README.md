@@ -6,7 +6,7 @@ test and debug your bots locally.
 To use:
 1. clone or download this code
 1. copy or move the 'DynamiteTester' folder (the one with Program.cs) into your bot's directory
-1. right-click the solution and 'Add', 'Existing Project', then select the solution file in the new folder
+1. right-click the solution and 'Add', 'Existing Project', then select the project file in the new folder
 1. right-click the new 'DynamiteTester' project and
    1. add a project reference to your bot project
    1. set as start-up project
