@@ -16,11 +16,12 @@ namespace DynamiteTester
 
             // Game setup
             int target = 1000, maxRounds = 2500, numberDynamites = 100;
+            bool tiesRollOver = true; // true = the next win claims all the tied round points; false = tied rounds don't score
             int printEvery = 100;
 
             // Fight!
             var rounds = new List<GameRound>();
-            int score1 = 0, score2 = 0, lastPrinted = 0;
+            int score1 = 0, score2 = 0, tiesRolledOver = 0, lastPrinted = 0;
             int dynamites1 = numberDynamites, dynamites2 = numberDynamites;
             string result = null;
             string player1Name = player1.GetType().Name, player2Name = player2.GetType().Name;
@@ -30,10 +31,11 @@ namespace DynamiteTester
                 player2Name += " B";
             }
 
-            Console.WriteLine($"{player1Name} vs {player2Name} (first to {target}, {maxRounds} rounds, {numberDynamites} dynamites each)");
+            var tiesRule = tiesRollOver ? "ties roll over" : "ties do not roll over";
+            Console.WriteLine($"{player1Name} vs {player2Name} (first to {target}, {maxRounds} rounds, {numberDynamites} dynamites each, {tiesRule})");
             Console.WriteLine();
 
-            while (rounds.Count < maxRounds)
+            while (rounds.Count < maxRounds && result == null)
             {
                 // Build a new Gamestate for each bot, with their moves as player 1
                 var gamestate1 = new Gamestate();
@@ -59,15 +61,22 @@ namespace DynamiteTester
                 // Check who won the round, store the round history and increment the scores
                 int winner = WhoWon(move1, move2);
                 rounds.Add(new GameRound() { Move1 = move1, Move2 = move2, Winner = winner });
-                if ((winner == 1) && ((++score1) >= target))
+                switch (winner)
                 {
-                    result = $"{player1Name} won (first to {target})";
-                    break;
-                }
-                if ((winner == 2) && ((++score2) >= target))
-                {
-                    result = $"{player2Name} won (first to {target})";
-                    break;
+                    case 1:
+                        ++score1;
+                        if (tiesRollOver) { score1 += tiesRolledOver; tiesRolledOver = 0; }
+                        if (score1 > target) result = $"{player1Name} won (first to {target})";
+                        break;
+                    case 2:
+                        ++score2;
+                        if (tiesRollOver) { score2 += tiesRolledOver; tiesRolledOver = 0; }
+                        if (score2 > target) result = $"{player2Name} won (first to {target})";
+                        break;
+                    default:
+                        // Tie
+                        ++tiesRolledOver;
+                        break;
                 }
 
                 if ((rounds.Count - lastPrinted) >= printEvery)
